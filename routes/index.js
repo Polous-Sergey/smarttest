@@ -13,23 +13,20 @@ const storage = multer.diskStorage(
     }
 );
 const upload = multer({storage: storage});
+
 const auth = jwt({
     secret: 'MY_SECRET',
     userProperty: 'payload'
 });
 
-const ctrlProfile = require('../controllers/profile');
-const ctrlAuth = require('../controllers/authentication');
-const ctrlImage = require('../controllers/image');
-
+const ctrlUsers = require('../controllers/users');
 const ctrlGenres = require('../controllers/genres');
 
-// profile
-router.get('/profile', auth, ctrlProfile.profileRead);
-
-// authentication
-router.post('/register', ctrlAuth.register);
-router.post('/login', ctrlAuth.login);
+// users
+router.post('/users', ctrlUsers.register);
+router.post('/users/auth', ctrlUsers.login);
+router.get('/users', auth, ctrlUsers.userList);
+router.get('/users/:id', auth, ctrlUsers.userById);
 
 // genres
 router.get('/genres ', ctrlGenres.genresGetAll);
@@ -38,9 +35,9 @@ router.post('/genres ', ctrlGenres.genresPost);
 router.put('/genres ', ctrlGenres.genresPut);
 router.delete('/genres ', ctrlGenres.genresDelete);
 
-// image
-router.get('/image/:id', ctrlImage.imageGetByID);
 
+// image
+// router.get('/image/:id', ctrlImage.imageGetByID);
 // price-list
 // router.post('/price-list', upload.fields([{name: 'image', maxCount: 1}, {
 //     name: 'listImage',

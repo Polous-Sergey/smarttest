@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
-const config = require('./config');
+const config = require('./config/main-config');
 
 // [SH] Bring in the data model
 require('./models/db');
@@ -31,12 +31,6 @@ app.use(passport.initialize());
 // [SH] Use the API routes when path starts with /api
 app.use('/api', routesApi);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    let err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {

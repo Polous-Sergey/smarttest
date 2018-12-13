@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 let gracefulShutdown;
-const config = require('../config');
+const config = require('../config/main-config');
 const dbURI = config.database;
 
 mongoose.connect(dbURI);
