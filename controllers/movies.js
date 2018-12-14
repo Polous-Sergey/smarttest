@@ -1,42 +1,34 @@
-const fs = require('fs');
-const sharp = require('sharp');
-const moviesService = require('../services/users.service');
+const moviesService = require('../services/movies.service');
 
 module.exports = {
     create,
-    // userList,
-    // userById
+    moviesList,
+    movieById,
+    delete: _delete
 };
 
 async function create(req, res, next) {
-    console.log(req.file.buffer);
-
-    // res.sendStatus(200);
-
-    sharp(req.file.path)
-        .rotate()
-        .resize(200)
-        .toBuffer()
-        .then(data => res.send(data))
-        .catch(err => res.send(err));
-
-    // res.send(fs.readFileSync(req.file.path));
-
-    // moviesService.create(req.body)
-    //     .then(token => res.status(200).json({token}))
-    //     .catch(err => next(err));
+    moviesService.create(req.body, req.file)
+        .then(movie => res.status(200).json(movie))
+        .catch(err => next(err));
 }
 
-// function getAll(req, res) {
-//     moviesService.getAll()
-//         .then(users => res.status(200).json(users))
-//         .catch(err => next(err));
-// }
-//
-// function getById(req, res) {
-//     moviesService.getById(req.params.id)
-//         .then(user => user ? res.status(200).json(user) : res.sendStatus(404))
-//         .catch(err => next(err));
-// }
+function moviesList(req, res, next) {
+    moviesService.getAll()
+        .then(movies => res.status(200).json(movies))
+        .catch(err => next(err));
+}
+
+function movieById(req, res, next) {
+    moviesService.getById(req.params.id)
+        .then(movie => movie ? res.status(200).json(movie) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+function _delete(req, res, next) {
+    moviesService.delete(req.params.id)
+        .then(() => res.sendStatus(200))
+        .catch(err => next(err));
+}
 
 

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const Movies = mongoose.model('Genres');
+const sharp = require('sharp');
+const Movies = mongoose.model('Movies');
+const genresService = require('./genres.service');
 
 module.exports = {
     getAll,
@@ -16,25 +18,49 @@ async function getById(id) {
     return await Movies.findById(id).populate('genre');
 }
 
-async function create(MovieParam) {
+async function create(movieParam, file) {
     // validate
-    if (!MovieParam.name) {
-        throw 'Name field required';
+    if (!movieParam.name || !movieParam.year || !movieParam.genre || !file || !movieParam.price) {
+        throw 'All fields required';
     }
 
-    let name = genreParam.name.trim();
+    let name = movieParam.name.trim();
+    let year = +movieParam.year.trim();
+    let price = +movieParam.price.trim();
+    let genre = movieParam.genre.trim();
+    let imageBuffer;
 
-    if(name.length < 1) throw 'Name must be at least 1 letters long';
+    if (name.length < 1) throw 'Name must be at least 1 letters long';
+    if (name.length > 5) throw 'Name must be no more than 5 letters long';
+    if (!price) throw 'Price must contain only numbers';
+    if (!year) throw 'Year must contain only numbers';
+    if (year < 1000 || year > 9999) throw 'Year must contain only 4 numbers';
 
-    if (await Genres.findOne({ name: name })) {
-        throw 'Genre "' + name + '" is already taken';
+    try {
+        if (!await genresService.getById(genre)) {
+            throw ''
+        }
+    } catch (err) {
+        throw 'Invalig genre id';
     }
 
-    const genre = new Genres();
-    genre.name = name;
+    try {
+        imageBuffer = await sharp(file.path)
+            .resize(100, 200)
+            .toBuffer()
+    } catch (err) {
+        throw err;
+    }
 
-    // save genre
-    return await genre.save();
+    const movie = new Movies();
+    movie.name = name;
+    movie.year = year;
+    movie.price = price;
+    movie.genre = genre;
+    movie.image = imageBuffer;
+
+    // save movie
+    return await movie.save();
 }
 
 async function _delete(id) {

@@ -38,13 +38,13 @@ function login(req, res, next) {
     }
 }
 
-function userList(req, res) {
+function userList(req, res, next) {
     usersService.getAll()
         .then(users => res.status(200).json(users))
         .catch(err => next(err));
 }
 
-function userById(req, res) {
+function userById(req, res, next) {
     usersService.getById(req.params.id)
         .then(user => user ? res.status(200).json(user) : res.sendStatus(404))
         .catch(err => next(err));

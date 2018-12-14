@@ -20,9 +20,9 @@ router.post('/genres',jwt, ctrlGenres.create);
 router.delete('/genres/:id', jwt, ctrlGenres.delete);
 
 // movies
-// router.get('/movies', jwt, ctrlMovies.genresList);
-// router.get('/movies/:id', jwt, ctrlMovies.genreById);
+router.get('/movies', jwt, ctrlMovies.moviesList);
+router.get('/movies/:id', jwt, ctrlMovies.movieById);
 router.post('/movies',jwt, upload.single('image'), ctrlMovies.create);
-// router.delete('/movies/:id', jwt, ctrlMovies.delete);
+router.delete('/movies/:id', jwt, ctrlMovies.delete);
 
 module.exports = router;
