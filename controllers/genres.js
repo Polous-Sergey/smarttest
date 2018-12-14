@@ -1,88 +1,32 @@
-const Genres = require('../models/genres');
-
-function genresGetAll(req, res) {
-    Genres.find({}, (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.json({
-                success: false,
-                err: err
-            });
-        }
-
-        res.json({
-            success: true,
-            data: data
-        });
-    });
-}
-
-function genresGetById(req, res) {
-    Genres.findById(req.params.id, (err, genres) => {
-        if (err || !product) {
-            return res.json({
-                succes: false,
-            });
-        }
-        res.status(200);
-        res.json({
-            succes: true,
-            genres: genres
-        });
-    })
-}
-
-function genresPost(req, res) {
-    let genres = new Genres();
-    genres.name = req.body.name;
-    genres.save((err, data) => {
-        if(err) {
-            return res.json({
-                success: false,
-                err: err
-            });
-        }
-        return res.json({
-            success: true,
-            data: data
-        });
-    });
-}
-
-function genresPut(req, res) {
-    Genres.findById(req.params.id, (err, genres) => {
-        if (err || !product) {
-            return res.json({
-                succes: false,
-            });
-        }
-        genres.name = req.body.name;
-        genres.save((err, data) => {
-            if(err) {
-                return res.json({
-                    success: false,
-                    err: err
-                });
-            }
-            return res.json({
-                success: true,
-                data: data
-            });
-        });
-    })
-}
-
-function genresDelete(req, res) {
-    res.status(200);
-    res.json({
-        "succes": true
-    });
-}
+const genresService = require('../services/genres.service');
 
 module.exports = {
-    genresGetAll,
-    genresGetById,
-    genresPost,
-    genresPut,
-    genresDelete
+    create,
+    genresList,
+    genreById,
+    delete: _delete
 };
+
+async function create(req, res, next) {
+    genresService.create(req.body)
+        .then(genre => res.status(200).json({genre}))
+        .catch(err => next(err));
+}
+
+function genresList(req, res, next) {
+    genresService.getAll()
+        .then(genres => res.status(200).json(genres))
+        .catch(err => next(err));
+}
+
+function genreById(req, res, next) {
+    genresService.getById(req.params.id)
+        .then(genre => genre ? res.status(200).json(genre) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+function _delete(req, res, next) {
+    genresService.delete(req.params.id)
+        .then(() => res.sendStatus(200))
+        .catch(err => next(err));
+}

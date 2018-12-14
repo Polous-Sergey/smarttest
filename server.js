@@ -1,45 +1,33 @@
 const express = require('express');
-const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const passport = require('passport');
-const config = require('./config/main-config');
+const logger = require('morgan');
+const errorHandler = require('./error-handler');
 
-// [SH] Bring in the data model
+// bring in the data model
 require('./models/db');
 
-// [SH] Bring in the Passport config after model is defined
+// bring in the Passport config
 require('./config/passport');
 
-// [SH] Bring in the routes for the API (delete the default routes)
-const routesApi = require('./routes/index');
-
-const app = express();
-
 app.use(logger('dev'));
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(cors());
 
-// [SH] Initialise Passport before using the route middleware
+// initialise passport
 app.use(passport.initialize());
 
-// [SH] Use the API routes when path starts with /api
-app.use('/api', routesApi);
+// api routes
+app.use('/api', require('./routes/index'));
 
+// global error handler
+app.use(errorHandler);
 
-// [SH] Catch unauthorised errors
-app.use(function (err, req, res, next) {
-    if (err.name === 'UnauthorizedError') {
-        res.status(401);
-        res.json({"message": err.name + ": " + err.message});
-    }
-});
-
-app.listen(config.port, () => {
-    console.log('API Started on port ' + config.port);
+// start server
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+app.listen(port, function () {
+    console.log('API Started on port ' + port);
 });
