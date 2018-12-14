@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const logger = require('morgan');
-const errorHandler = require('./error-handler');
+const errorHandler = require('./config/error-handler');
 
 // bring in the data model
 require('./models/db');

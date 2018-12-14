@@ -21,9 +21,7 @@ function login(req, res, next) {
         });
     }
 
-    passport.authenticate('local', cb)(req, res);
-
-    function cb(err, user, info) {
+    passport.authenticate('local', {}, (err, user, info) => {
         if (err) {
             return next(err);
         }
@@ -35,7 +33,7 @@ function login(req, res, next) {
                 });
         }
         res.status(401).json(info);
-    }
+    })(req, res);
 }
 
 function userList(req, res, next) {
@@ -50,4 +48,6 @@ function userById(req, res, next) {
         .catch(err => next(err));
 }
 
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YzEzOWI5OWIxMGZjNTUyZDRlZTNjMjkiLCJpYXQiOjE1NDQ3ODk2Mjd9.X5GJ_b5tAfWvosi-RkAIkc_nsAi0nNf2FW5CYN31adU
 
+// 5c139b99b10fc552d4ee3c29

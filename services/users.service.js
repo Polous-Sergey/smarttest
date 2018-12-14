@@ -36,8 +36,10 @@ async function create(userParam) {
     if (email.length < 8) throw 'Email must be at least 8 characters long';
     if (email.length > 50) throw 'Email must be no more than 50 characters long';
 
+    if (password.length < 1) throw 'Password must be at least 1 characters long';
+
     if (await getByEmail(email)) {
-        throw 'Email "' + email + '" is already taken';
+        throw 'Email ' + email + ' is already taken';
     }
 
     const user = new User();

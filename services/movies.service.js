@@ -30,18 +30,20 @@ async function create(movieParam, file) {
     let genre = movieParam.genre.trim();
     let imageBuffer;
 
-    if (name.length < 1) throw 'Name must be at least 1 letters long';
-    if (name.length > 5) throw 'Name must be no more than 5 letters long';
+    if (name.length < 1) throw 'Name must be at least 1 symbol long';
+    if (name.length > 5) throw 'Name must be no more than 5 symbol long';
     if (!price) throw 'Price must contain only numbers';
+    if (price < 1) throw 'Price must be more than 1';
     if (!year) throw 'Year must contain only numbers';
-    if (year < 1000 || year > 9999) throw 'Year must contain only 4 numbers';
+    if (year < 1000 || year > 9999) throw 'Year must contain only 4 digits';
+    if (genre.length < 5) throw 'Invalid genre id';
 
     try {
         if (!await genresService.getById(genre)) {
             throw ''
         }
     } catch (err) {
-        throw 'Invalig genre id';
+        throw 'Invalid genre id';
     }
 
     try {
