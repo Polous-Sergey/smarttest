@@ -27,7 +27,7 @@ app.use('/api', require('./routes/index'));
 app.use(errorHandler);
 
 // start server
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4022;
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 app.listen(port, function () {
     console.log('API Started on port ' + port);
 });

@@ -47,7 +47,3 @@ function userById(req, res, next) {
         .then(user => user ? res.status(200).json(user) : res.sendStatus(404))
         .catch(err => next(err));
 }
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YzEzOWI5OWIxMGZjNTUyZDRlZTNjMjkiLCJpYXQiOjE1NDQ3ODk2Mjd9.X5GJ_b5tAfWvosi-RkAIkc_nsAi0nNf2FW5CYN31adU
-
-// 5c139b99b10fc552d4ee3c29
